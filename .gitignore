@@ -1,6 +1,7 @@
 *.sln
 *.csproj
 *.vs
+*.vsconfig
 UnityPackageManager
 Temp
 obj
