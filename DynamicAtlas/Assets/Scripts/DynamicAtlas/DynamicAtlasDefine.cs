@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace GFrame
 {
-    /// <summary>
-    /// 动态图集组
-    /// </summary>
     public enum DynamicAtlasGroup
     {
         Size_256 = 256,
@@ -14,13 +11,6 @@ namespace GFrame
         Size_1024 = 1024,
         Size_2048 = 2048
     }
-
-
-    public struct DynamicAtlasDefine
-    {
-
-    }
-
 
     public delegate void OnCallBackTexRect(Texture tex, Rect rect);
 }

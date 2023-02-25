@@ -45,7 +45,7 @@ namespace GFrame
             }
 
             m_Group = group;
-            m_Atlas = DynamicAtlasMgr.Instance.GetDynamicAtlas(group);
+            m_Atlas = DynamicAtlasMgr.S.GetDynamicAtlas(group);
         }
 
         private void SetImage()

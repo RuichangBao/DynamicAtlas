@@ -6,7 +6,7 @@ public abstract class Singleton<T> where T : new()
 {
     private static T instance;
 
-    public static T Instance
+    public static T S
     {
         get
         {
