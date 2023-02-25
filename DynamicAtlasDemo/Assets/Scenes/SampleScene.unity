@@ -187,7 +187,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
 --- !u!222 &145217868
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -270,7 +269,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
 --- !u!1 &264254482
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +335,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
 --- !u!222 &264254486
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -616,7 +613,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,7 +776,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
 --- !u!222 &1701705985
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -929,4 +924,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  dynamicAtlas: {fileID: 963194229}
