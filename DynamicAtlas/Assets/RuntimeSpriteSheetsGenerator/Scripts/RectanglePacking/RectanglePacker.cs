@@ -53,17 +53,17 @@ namespace DaVikingCode.RectanglePacking
 
         public RectanglePacker(int width, int height, int padding = 0)
         {
-            mOutsideRectangle = RectanglePackerMgr.S.AllocateIntegerRectangle(width + 1, height + 1, 0, 0);
+            mOutsideRectangle = RectanglePackerMgr.Instance.AllocateIntegerRectangle(width + 1, height + 1, 0, 0);
             Reset(width, height, padding);
         }
 
         public void Reset(int width, int height, int padding = 0)
         {
             while (m_InsertedRectangles.Count > 0)
-                RectanglePackerMgr.S.ReleaseIntegerRectangle(m_InsertedRectangles.Pop());
+                RectanglePackerMgr.Instance.ReleaseIntegerRectangle(m_InsertedRectangles.Pop());
 
             while (m_FreeAreas.Count > 0)
-                RectanglePackerMgr.S.ReleaseIntegerRectangle(m_FreeAreas.Pop());
+                RectanglePackerMgr.Instance.ReleaseIntegerRectangle(m_FreeAreas.Pop());
 
             m_Width = width;
             m_Height = height;
@@ -71,10 +71,10 @@ namespace DaVikingCode.RectanglePacking
             m_PackedWidth = 0;
             m_PackedHeight = 0;
 
-            m_FreeAreas.Add(RectanglePackerMgr.S.AllocateIntegerRectangle(0, 0, m_Width, m_Height));//默认添加一个铺满的区域
+            m_FreeAreas.Add(RectanglePackerMgr.Instance.AllocateIntegerRectangle(0, 0, m_Width, m_Height));//默认添加一个铺满的区域
 
             while (m_InsertList.Count > 0)
-                RectanglePackerMgr.S.ReleaseSize(m_InsertList.Pop());
+                RectanglePackerMgr.Instance.ReleaseSize(m_InsertList.Pop());
 
             m_Padding = padding;
         }
@@ -97,7 +97,7 @@ namespace DaVikingCode.RectanglePacking
 
         public void InsertRectangle(int width, int height, int id)
         {
-            SortableSize sortableSize = RectanglePackerMgr.S.AllocateSize(width, height, id);
+            SortableSize sortableSize = RectanglePackerMgr.Instance.AllocateSize(width, height, id);
             m_InsertList.Add(sortableSize);
         }
 
@@ -157,7 +157,7 @@ namespace DaVikingCode.RectanglePacking
                 if (index >= 0)
                 {
                     IntegerRectangle freeArea = m_FreeAreas[index];//得到一个可以容纳target的Area
-                    IntegerRectangle target = RectanglePackerMgr.S.AllocateIntegerRectangle(freeArea.x, freeArea.y, width, height);
+                    IntegerRectangle target = RectanglePackerMgr.Instance.AllocateIntegerRectangle(freeArea.x, freeArea.y, width, height);
                     target.id = sortableSize.id;
 
                     // Generate the new free areas, these are parts of the old ones intersected or touched by the target
@@ -175,7 +175,7 @@ namespace DaVikingCode.RectanglePacking
                         m_PackedHeight = target.top;
                 }
 
-                RectanglePackerMgr.S.ReleaseSize(sortableSize);
+                RectanglePackerMgr.Instance.ReleaseSize(sortableSize);
             }
 
             return rectangleCount;
@@ -201,7 +201,7 @@ namespace DaVikingCode.RectanglePacking
                 {
                     UnityEngine.Debug.LogError(target.x + ":" + area.x);
                     if (targetWithPadding == null)
-                        targetWithPadding = RectanglePackerMgr.S.AllocateIntegerRectangle(target.x, target.y, target.width + m_Padding, target.height + m_Padding);
+                        targetWithPadding = RectanglePackerMgr.Instance.AllocateIntegerRectangle(target.x, target.y, target.width + m_Padding, target.height + m_Padding);
 
                     GenerateDividedAreas(targetWithPadding, area, results);
                     IntegerRectangle topOfStack = m_FreeAreas.Pop();
@@ -214,7 +214,7 @@ namespace DaVikingCode.RectanglePacking
             }
 
             if (targetWithPadding != null && targetWithPadding != target)
-                RectanglePackerMgr.S.ReleaseIntegerRectangle(targetWithPadding);
+                RectanglePackerMgr.Instance.ReleaseIntegerRectangle(targetWithPadding);
 
             FilterSelfSubAreas(results);
         }
@@ -226,28 +226,28 @@ namespace DaVikingCode.RectanglePacking
             int rightDelta = area.right - divider.right;
             if (rightDelta > 0)
             {
-                results.Add(RectanglePackerMgr.S.AllocateIntegerRectangle(divider.right, area.y, rightDelta, area.height));
+                results.Add(RectanglePackerMgr.Instance.AllocateIntegerRectangle(divider.right, area.y, rightDelta, area.height));
                 count++;
             }
 
             int leftDelta = divider.x - area.x;
             if (leftDelta > 0)
             {
-                results.Add(RectanglePackerMgr.S.AllocateIntegerRectangle(area.x, area.y, leftDelta, area.height));
+                results.Add(RectanglePackerMgr.Instance.AllocateIntegerRectangle(area.x, area.y, leftDelta, area.height));
                 count++;
             }
 
             int bottomDelta = area.top - divider.top;
             if (bottomDelta > 0)
             {
-                results.Add(RectanglePackerMgr.S.AllocateIntegerRectangle(area.x, divider.top, area.width, bottomDelta));
+                results.Add(RectanglePackerMgr.Instance.AllocateIntegerRectangle(area.x, divider.top, area.width, bottomDelta));
                 count++;
             }
 
             int topDelta = divider.y - area.y;
             if (topDelta > 0)
             {
-                results.Add(RectanglePackerMgr.S.AllocateIntegerRectangle(area.x, area.y, area.width, topDelta));
+                results.Add(RectanglePackerMgr.Instance.AllocateIntegerRectangle(area.x, area.y, area.width, topDelta));
                 count++;
             }
 
@@ -258,7 +258,7 @@ namespace DaVikingCode.RectanglePacking
 
             }
             else
-                RectanglePackerMgr.S.ReleaseIntegerRectangle(area);
+                RectanglePackerMgr.Instance.ReleaseIntegerRectangle(area);
         }
 
         private void FilterSelfSubAreas(List<IntegerRectangle> areas)
@@ -273,7 +273,7 @@ namespace DaVikingCode.RectanglePacking
                         IntegerRectangle area = areas[j];
                         if (filtered.x >= area.x && filtered.y >= area.y && filtered.right <= area.right && filtered.top <= area.top)
                         {
-                            RectanglePackerMgr.S.ReleaseIntegerRectangle(filtered);
+                            RectanglePackerMgr.Instance.ReleaseIntegerRectangle(filtered);
                             IntegerRectangle topOfStack = areas.Pop();
                             if (i < areas.Count)
                             {

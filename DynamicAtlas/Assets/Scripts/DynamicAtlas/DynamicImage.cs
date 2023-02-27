@@ -45,7 +45,7 @@ namespace GFrame
             }
 
             m_Group = group;
-            m_Atlas = DynamicAtlasMgr.S.GetDynamicAtlas(group);
+            m_Atlas = DynamicAtlasMgr.Instance.GetDynamicAtlas(group);
         }
 
         private void SetImage()
@@ -102,7 +102,6 @@ namespace GFrame
             {
                 m_Atlas.RemoveTexture(m_SpriteName, clearRange);
             }
-
         }
         #endregion
     }

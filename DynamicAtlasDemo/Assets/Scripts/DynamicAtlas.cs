@@ -44,7 +44,7 @@ public class DynamicAtlas : MonoBehaviour
     {
         // 拿缓存
         int spriteInstanceID = sprite.GetInstanceID();
-        Debug.LogError(string.Format(" name: {0} instanceid: {1}", sprite.name, spriteInstanceID));
+        //Debug.LogError(string.Format(" name: {0} instanceid: {1}", sprite.name, spriteInstanceID));
         int index = -1;
         if (_spriteRedirectMap.TryGetValue(spriteInstanceID, out index))
         {
@@ -68,8 +68,7 @@ public class DynamicAtlas : MonoBehaviour
         if (emptySprite != null)
         {
             // GPU上直接操作 速度快 兼容性差
-            Graphics.CopyTexture(sprite.texture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height,
-                                _dynamicAtlasTex, 0, 0, (int)emptySprite.sprite.rect.x, (int)emptySprite.sprite.rect.y);
+            Graphics.CopyTexture(sprite.texture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height, _dynamicAtlasTex, 0, 0, (int)emptySprite.sprite.rect.x, (int)emptySprite.sprite.rect.y);
 
             // 这里要先删除上一个的
             index = GetIndex(emptySprite);

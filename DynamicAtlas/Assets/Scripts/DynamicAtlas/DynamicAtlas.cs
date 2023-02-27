@@ -43,7 +43,7 @@ namespace GFrame
         {
             foreach (var data in m_UsingTexture)
             {
-                DynamicAtlasMgr.S.ReleaseSaveTextureData(data.Value);
+                DynamicAtlasMgr.Instance.ReleaseSaveTextureData(data.Value);
             }
             m_UsingTexture.Clear();
         }
@@ -77,7 +77,7 @@ namespace GFrame
                 return;
             }
 
-            GetTextureData data = DynamicAtlasMgr.S.AllocateGetTextureData();
+            GetTextureData data = DynamicAtlasMgr.Instance.AllocateGetTextureData();
             data.name = texture.name;
             data.callback = callBack;
             m_GetTextureTaskList.Add(data);
@@ -109,7 +109,7 @@ namespace GFrame
                     return;
                 }
 
-                GetTextureData data = DynamicAtlasMgr.S.AllocateGetTextureData();
+                GetTextureData data = DynamicAtlasMgr.Instance.AllocateGetTextureData();
                 data.name = texture.name;
                 data.callback = callback;
                 m_GetTextureTaskList.Add(data);
@@ -137,7 +137,7 @@ namespace GFrame
                     }
 
                     m_UsingTexture.Remove(name);
-                    DynamicAtlasMgr.S.ReleaseSaveTextureData(data);
+                    DynamicAtlasMgr.Instance.ReleaseSaveTextureData(data);
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace GFrame
                         }
                     }
 
-                    DynamicAtlasMgr.S.ReleaseGetTextureData(task);
+                    DynamicAtlasMgr.Instance.ReleaseGetTextureData(task);
                     m_GetTextureTaskList.RemoveAt(i);
                 }
 
@@ -179,7 +179,7 @@ namespace GFrame
             Rect uv = new Rect((useArea.x), (useArea.y), texture2D.width, texture2D.height);
             m_PageList[index].AddTexture(useArea.x, useArea.y, texture2D);
 
-            SaveTextureData saveTextureData = DynamicAtlasMgr.S.AllocateSaveTextureData();
+            SaveTextureData saveTextureData = DynamicAtlasMgr.Instance.AllocateSaveTextureData();
             saveTextureData.texIndex = index;
             saveTextureData.rect = uv;
             m_UsingTexture[name] = saveTextureData;
@@ -197,7 +197,7 @@ namespace GFrame
                         task.callback(dstTex, uv);
                     }
                 }
-                DynamicAtlasMgr.S.ReleaseGetTextureData(task);
+                DynamicAtlasMgr.Instance.ReleaseGetTextureData(task);
                 m_GetTextureTaskList.RemoveAt(i);
             }
         }
@@ -225,7 +225,7 @@ namespace GFrame
                 freeArea = page.freeAreasList[0];
             }
 
-            result = DynamicAtlasMgr.S.AllocateIntegerRectangle(freeArea.x, freeArea.y, width, height);
+            result = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(freeArea.x, freeArea.y, width, height);
             GenerateNewFreeAreas(result, page);
 
             page.RemoveFreeArea(freeArea);
@@ -250,7 +250,7 @@ namespace GFrame
                 if (!(x >= area.right || right <= area.x || y >= area.top || top <= area.y))
                 {
                     if (targetWithPadding == null)
-                        targetWithPadding = DynamicAtlasMgr.S.AllocateIntegerRectangle(target.x, target.y, target.width + m_Padding, target.height + m_Padding);
+                        targetWithPadding = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(target.x, target.y, target.width + m_Padding, target.height + m_Padding);
 
                     GenerateDividedAreas(targetWithPadding, area, m_WaitAddNewAreaList);
                     IntegerRectangle topOfStack = page.freeAreasList.Pop();
@@ -263,7 +263,7 @@ namespace GFrame
             }
 
             if (targetWithPadding != null && targetWithPadding != target)
-                DynamicAtlasMgr.S.ReleaseIntegerRectangle(targetWithPadding);
+                DynamicAtlasMgr.Instance.ReleaseIntegerRectangle(targetWithPadding);
 
             FilterSelfSubAreas(m_WaitAddNewAreaList);
             while (m_WaitAddNewAreaList.Count > 0)
@@ -288,28 +288,28 @@ namespace GFrame
             int rightDelta = area.right - divider.right;
             if (rightDelta > 0)
             {
-                results.Add(DynamicAtlasMgr.S.AllocateIntegerRectangle(divider.right, area.y, rightDelta, area.height));
+                results.Add(DynamicAtlasMgr.Instance.AllocateIntegerRectangle(divider.right, area.y, rightDelta, area.height));
                 count++;
             }
 
             int leftDelta = divider.x - area.x;
             if (leftDelta > 0)
             {
-                results.Add(DynamicAtlasMgr.S.AllocateIntegerRectangle(area.x, area.y, leftDelta, area.height));
+                results.Add(DynamicAtlasMgr.Instance.AllocateIntegerRectangle(area.x, area.y, leftDelta, area.height));
                 count++;
             }
 
             int bottomDelta = area.top - divider.top;
             if (bottomDelta > 0)
             {
-                results.Add(DynamicAtlasMgr.S.AllocateIntegerRectangle(area.x, divider.top, area.width, bottomDelta));
+                results.Add(DynamicAtlasMgr.Instance.AllocateIntegerRectangle(area.x, divider.top, area.width, bottomDelta));
                 count++;
             }
 
             int topDelta = divider.y - area.y;
             if (topDelta > 0)
             {
-                results.Add(DynamicAtlasMgr.S.AllocateIntegerRectangle(area.x, area.y, area.width, topDelta));
+                results.Add(DynamicAtlasMgr.Instance.AllocateIntegerRectangle(area.x, area.y, area.width, topDelta));
                 count++;
             }
 
@@ -320,7 +320,7 @@ namespace GFrame
 
             }
             else
-                DynamicAtlasMgr.S.ReleaseIntegerRectangle(area);
+                DynamicAtlasMgr.Instance.ReleaseIntegerRectangle(area);
         }
 
         private void FilterSelfSubAreas(List<IntegerRectangle> areas)
@@ -335,7 +335,7 @@ namespace GFrame
                         IntegerRectangle area = areas[j];
                         if (filtered.x >= area.x && filtered.y >= area.y && filtered.right <= area.right && filtered.top <= area.top)
                         {
-                            DynamicAtlasMgr.S.ReleaseIntegerRectangle(filtered);
+                            DynamicAtlasMgr.Instance.ReleaseIntegerRectangle(filtered);
                             IntegerRectangle topOfStack = areas.Pop();
                             if (i < areas.Count)
                             {
@@ -375,7 +375,7 @@ namespace GFrame
             m_Texture.Apply(false);
             m_Texture.name = string.Format("DynamicAtlas-{0}*{1}-{2}", width, height, index);
 
-            var area = DynamicAtlasMgr.S.AllocateIntegerRectangle(0, 0, m_Width, m_Height);
+            var area = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(0, 0, m_Width, m_Height);
             m_FreeAreasList.Add(area);
         }
 
@@ -415,7 +415,7 @@ namespace GFrame
                 return -1;
             }
 
-            IntegerRectangle best = DynamicAtlasMgr.S.AllocateIntegerRectangle(m_Width + 1, m_Height + 1, 0, 0);
+            IntegerRectangle best = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(m_Width + 1, m_Height + 1, 0, 0);
             int index = -1;
 
             int paddedWidth = width + padding;
@@ -459,7 +459,7 @@ namespace GFrame
 
         public void RemoveFreeArea(IntegerRectangle area)
         {
-            DynamicAtlasMgr.S.ReleaseIntegerRectangle(area);
+            DynamicAtlasMgr.Instance.ReleaseIntegerRectangle(area);
             m_FreeAreasList.Remove(area);
         }
     }
