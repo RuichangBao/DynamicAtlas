@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GFrame
 {
+    /// <summary>
+    /// 动态图集
+    /// </summary>
     public class DynamicAtlas
     {
         private int m_Width, m_Height = 0;
@@ -11,6 +14,9 @@ namespace GFrame
         // private int m_PackedWidth, m_PackedHeight = 0;
 
         private List<DynamicAtlasPage> m_PageList = new List<DynamicAtlasPage>();
+        /// <summary>
+        /// 设置图片回调函数
+        /// </summary>
         private List<GetTextureData> m_GetTextureTaskList = new List<GetTextureData>();
         private List<IntegerRectangle> m_WaitAddNewAreaList = new List<IntegerRectangle>();
         private Dictionary<string, SaveTextureData> m_UsingTexture = new Dictionary<string, SaveTextureData>();
@@ -30,9 +36,9 @@ namespace GFrame
             CreateNewPage();
         }
 
-        DynamicAtlasPage CreateNewPage()
+        private DynamicAtlasPage CreateNewPage()
         {
-            var page = new DynamicAtlasPage(m_PageList.Count, m_Width, m_Height, m_TempColor);
+            DynamicAtlasPage page = new DynamicAtlasPage(m_PageList.Count, m_Width, m_Height, m_TempColor);
             m_PageList.Add(page);
             return page;
         }
@@ -268,15 +274,9 @@ namespace GFrame
             FilterSelfSubAreas(m_WaitAddNewAreaList);
             while (m_WaitAddNewAreaList.Count > 0)
             {
-                var free = m_WaitAddNewAreaList.Pop();
+                IntegerRectangle free = m_WaitAddNewAreaList.Pop();
                 page.AddFreeArea(free);
             }
-
-            // if (target.right > m_PackedWidth)
-            //     m_PackedWidth = target.right;
-
-            // if (target.top > m_PackedHeight)
-            //     m_PackedHeight = target.top;
         }
 
 
@@ -369,13 +369,13 @@ namespace GFrame
             m_Width = width;
             m_Height = height;
 
-            m_Texture = new Texture2D(width, height, DynamicAtlasConfig.kTextureFormat, false, true);
+            m_Texture = new Texture2D(width, height, TextureFormat.ARGB32, false, true);
             m_Texture.filterMode = FilterMode.Bilinear;
             m_Texture.SetPixels32(0, 0, width, height, tempColor);
             m_Texture.Apply(false);
             m_Texture.name = string.Format("DynamicAtlas-{0}*{1}-{2}", width, height, index);
 
-            var area = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(0, 0, m_Width, m_Height);
+            IntegerRectangle area = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(0, 0, m_Width, m_Height);
             m_FreeAreasList.Add(area);
         }
 

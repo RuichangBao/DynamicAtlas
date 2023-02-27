@@ -5,10 +5,15 @@ using UnityEngine;
 namespace GFrame
 {
 
-
+    /// <summary>
+    /// 单个图片信息
+    /// </summary>
     public class SaveTextureData
     {
         public int texIndex = -1;
+        /// <summary>
+        ///资源引用次数
+        /// </summary>
         public int referenceCount = 0;
         public Rect rect;
     }

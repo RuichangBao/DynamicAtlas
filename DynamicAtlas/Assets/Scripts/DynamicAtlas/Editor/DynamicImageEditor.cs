@@ -21,7 +21,7 @@ namespace GFrame
         {
             base.OnInspectorGUI();
             GUILayout.Space(5);
-            EditorGUILayout.LabelField("--------------------------------------------------------------------------------------------------------------------");
+            EditorGUILayout.LabelField("----------------------------------------------------");
             m_Target.atlasGroup = (DynamicAtlasGroup)EditorGUILayout.EnumPopup("Group", m_Target.atlasGroup);
         }
     }
