@@ -10,7 +10,6 @@ namespace GFrame
     public class DynamicAtlas
     {
         private int m_Width, m_Height = 0;
-        private int m_Padding = 4;
         // private int m_PackedWidth, m_PackedHeight = 0;
 
         private List<DynamicAtlasPage> m_PageList = new List<DynamicAtlasPage>();
@@ -219,7 +218,7 @@ namespace GFrame
             DynamicAtlasPage page = null;
             for (int i = 0; i < m_PageList.Count; i++)
             {
-                int fIndex = m_PageList[i].GetFreeAreaIndex(width, height, m_Padding);
+                int fIndex = m_PageList[i].GetFreeAreaIndex(width, height);
                 if (fIndex >= 0)
                 {
                     page = m_PageList[i];
@@ -247,11 +246,10 @@ namespace GFrame
         {
             int x = target.x;
             int y = target.y;
-            int right = target.right + 1 + m_Padding;
-            int top = target.top + 1 + m_Padding;
+            int right = target.right + 1;
+            int top = target.top + 1;
 
             IntegerRectangle targetWithPadding = null;
-            if (m_Padding == 0)
                 targetWithPadding = target;
 
             for (int i = page.freeAreasList.Count - 1; i >= 0; i--)
@@ -260,7 +258,7 @@ namespace GFrame
                 if (!(x >= area.right || right <= area.x || y >= area.top || top <= area.y))
                 {
                     if (targetWithPadding == null)
-                        targetWithPadding = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(target.x, target.y, target.width + m_Padding, target.height + m_Padding);
+                        targetWithPadding = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(target.x, target.y, target.width, target.height);
 
                     GenerateDividedAreas(targetWithPadding, area, m_WaitAddNewAreaList);
                     IntegerRectangle topOfStack = page.freeAreasList.Pop();
@@ -358,13 +356,25 @@ namespace GFrame
 
     public class DynamicAtlasPage
     {
+        /// <summary>
+        /// 图集页码
+        /// </summary>
         private int m_Index;
         private Texture2D m_Texture;
+        /// <summary>
+        /// 可用区域？
+        /// </summary>
         private List<IntegerRectangle> m_FreeAreasList = new List<IntegerRectangle>();
+        /// <summary>
+        /// 图集的宽高
+        /// </summary>
         private int m_Width, m_Height;
 
         public int index => m_Index;
         public Texture2D texture => m_Texture;
+        /// <summary>
+        /// 可用区域？
+        /// </summary>
         public List<IntegerRectangle> freeAreasList => m_FreeAreasList;
 
         public DynamicAtlasPage(int index, int width, int height, Color32[] tempColor)
@@ -411,7 +421,7 @@ namespace GFrame
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public int GetFreeAreaIndex(int width, int height, int padding)
+        public int GetFreeAreaIndex(int width, int height)
         {
             if (width > m_Width || height > m_Height)
             {
@@ -422,8 +432,8 @@ namespace GFrame
             IntegerRectangle best = DynamicAtlasMgr.Instance.AllocateIntegerRectangle(m_Width + 1, m_Height + 1, 0, 0);
             int index = -1;
 
-            int paddedWidth = width + padding;
-            int paddedHeight = height + padding;
+            int paddedWidth = width;
+            int paddedHeight = height;
 
             for (int i = m_FreeAreasList.Count - 1; i >= 0; i--)
             {
