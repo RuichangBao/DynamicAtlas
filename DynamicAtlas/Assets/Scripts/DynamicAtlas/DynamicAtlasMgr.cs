@@ -8,9 +8,9 @@ namespace GFrame
     {
         private Dictionary<DynamicAtlasGroup, DynamicAtlas> m_DynamicAtlasMap = new Dictionary<DynamicAtlasGroup, DynamicAtlas>();
 
-        private List<GetTextureData> m_GetTextureDataList = new List<GetTextureData>();
-        private List<SaveTextureData> m_SaveTextureDataList = new List<SaveTextureData>();
-        private List<IntegerRectangle> m_IntegerRectangleList = new List<IntegerRectangle>();
+        private Queue<GetTextureData> m_GetTextureDataQueue = new Queue<GetTextureData>();
+        private Queue<SaveTextureData> m_SaveTextureDataQueue = new Queue<SaveTextureData>();
+        private Queue<IntegerRectangle> m_IntegerRectangleQueue = new Queue<IntegerRectangle>();
 
         public DynamicAtlas GetDynamicAtlas(DynamicAtlasGroup group)
         {
@@ -30,9 +30,9 @@ namespace GFrame
 
         public SaveTextureData AllocateSaveTextureData()
         {
-            if (m_SaveTextureDataList.Count > 0)
+            if (m_SaveTextureDataQueue.Count > 0)
             {
-                return m_SaveTextureDataList.Pop();
+                return m_SaveTextureDataQueue.Dequeue();
             }
             SaveTextureData data = new SaveTextureData();
             return data;
@@ -40,14 +40,14 @@ namespace GFrame
 
         public void ReleaseSaveTextureData(SaveTextureData data)
         {
-            m_SaveTextureDataList.Add(data);
+            m_SaveTextureDataQueue.Enqueue(data);
         }
 
         public GetTextureData AllocateGetTextureData()
         {
-            if (m_GetTextureDataList.Count > 0)
+            if (m_GetTextureDataQueue.Count > 0)
             {
-                return m_GetTextureDataList.Pop();
+                return m_GetTextureDataQueue.Dequeue();
             }
             GetTextureData data = new GetTextureData();
             return data;
@@ -55,32 +55,34 @@ namespace GFrame
 
         public void ReleaseGetTextureData(GetTextureData data)
         {
-            m_GetTextureDataList.Add(data);
+            m_GetTextureDataQueue.Enqueue(data);
         }
 
         public IntegerRectangle AllocateIntegerRectangle(int x, int y, int width, int height)
         {
-            if (m_IntegerRectangleList.Count > 0)
+            if (m_IntegerRectangleQueue.Count > 0)
             {
-                IntegerRectangle rectangle = m_IntegerRectangleList.Pop();
+                IntegerRectangle rectangle = m_IntegerRectangleQueue.Dequeue();
                 rectangle.x = x;
                 rectangle.y = y;
                 rectangle.width = width;
                 rectangle.height = height;
+                //这个地方看不太懂后期修改 包芮昌
+                //return rectangle;
             }
             return new IntegerRectangle(x, y, width, height);
         }
 
         public void ReleaseIntegerRectangle(IntegerRectangle rectangle)
         {
-            m_IntegerRectangleList.Add(rectangle);
+            m_IntegerRectangleQueue.Enqueue(rectangle);
         }
 
         public void ClearAllCache()
         {
-            m_GetTextureDataList.Clear();
-            m_SaveTextureDataList.Clear();
-            m_IntegerRectangleList.Clear();
+            m_GetTextureDataQueue.Clear();
+            m_SaveTextureDataQueue.Clear();
+            m_IntegerRectangleQueue.Clear();
         }
     }
 

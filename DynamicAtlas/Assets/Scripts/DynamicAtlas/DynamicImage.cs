@@ -51,8 +51,6 @@ namespace GFrame
         {
             m_DefaultSprite = sprite;
             m_SpriteName = mainTexture.name;
-            Debug.LogError(mainTexture);
-            Debug.LogError(mainTexture.name);
             m_Atlas.SetTexture(mainTexture, OnGetImageCallBack);
         }
 
