@@ -35,8 +35,6 @@ namespace GFrame
         public int top => y + height;
         public int size => width * height;
 
-        public Rect rect => new Rect(x, y, width, height);
-
         public IntegerRectangle(int x, int y, int width, int height)
         {
             this.x = x;
