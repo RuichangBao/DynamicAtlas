@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GFrame
@@ -8,8 +9,17 @@ namespace GFrame
         public DynamicAtlasGroup atlasGroup = DynamicAtlasGroup.Size_1024;
 
         private DynamicAtlasGroup m_Group;
+        /// <summary>
+        /// 动态图集
+        /// </summary>
         private DynamicAtlas m_Atlas;
+        /// <summary>
+        /// 默认Sprite
+        /// </summary>
         private Sprite m_DefaultSprite;
+        /// <summary>
+        /// 图片名字
+        /// </summary>
         private string m_SpriteName;
 
         protected override void Awake()
@@ -52,18 +62,23 @@ namespace GFrame
             m_DefaultSprite = sprite;
             m_SpriteName = mainTexture.name;
             m_Atlas.SetTexture(mainTexture, OnGetImageCallBack);
+            #region 输出动态图集更直观
+            Debug.LogError("设置图片：" + m_Atlas.PageList.Count);
+            for (int i = 0; i < m_Atlas.PageList.Count; i++)
+            {
+                Texture2D texture2D = m_Atlas.PageList[i].texture;
+                byte[] texture2DData = texture2D.EncodeToPNG();
+                string path = Application.dataPath + "/动态图集.png";
+                File.WriteAllBytes(path, texture2DData);
+                Debug.LogError("写入完成");
+            }
+            #endregion
         }
-
 
         private void OnGetImageCallBack(Texture tex, Rect rect)
         {
-            // Debug.LogError(111);
             int length = (int)m_Group;
             Rect spriteRect = rect;
-            // spriteRect.x *= length;
-            // spriteRect.y *= length;
-            // spriteRect.width *= length;
-            // spriteRect.height *= length;
 
             if (m_DefaultSprite != null)
                 sprite = Sprite.Create((Texture2D)tex, spriteRect, m_DefaultSprite.pivot, m_DefaultSprite.pixelsPerUnit, 1, SpriteMeshType.Tight, m_DefaultSprite.border);

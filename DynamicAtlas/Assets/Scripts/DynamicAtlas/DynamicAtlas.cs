@@ -15,6 +15,10 @@ namespace GFrame
 
         private List<DynamicAtlasPage> m_PageList = new List<DynamicAtlasPage>();
         /// <summary>
+        /// 包小威 记得删除
+        /// </summary>
+        public List<DynamicAtlasPage> PageList { get=> m_PageList; }
+        /// <summary>
         /// 设置图片回调函数
         /// </summary>
         private List<GetTextureData> m_GetTextureTaskList = new List<GetTextureData>();
@@ -173,7 +177,7 @@ namespace GFrame
             }
 
             int index = 0;
-            IntegerRectangle useArea = InsertArea(texture2D.width, texture2D.height, out index);
+            IntegerRectangle useArea = this.InsertArea(texture2D.width, texture2D.height, out index);
             // Debug.LogError(name + ":Index:" + index);
 
             if (useArea == null)
@@ -425,26 +429,23 @@ namespace GFrame
             {
                 IntegerRectangle free = m_FreeAreasList[i];
 
-                // if (free.x < width || free.y < height)
+                if (free.x < best.x && paddedWidth <= free.width && paddedHeight <= free.height)//如果这个Free大小可以容纳目标大小的话
                 {
-                    if (free.x < best.x && paddedWidth <= free.width && paddedHeight <= free.height)//如果这个Free大小可以容纳目标大小的话
+                    index = i;
+                    if ((paddedWidth == free.width && free.width <= free.height && free.right < m_Width) || (paddedHeight == free.height && free.height <= free.width))//如果这个区域正好可以放得下
+                        break;
+                    best = free;
+                }
+                else
+                {
+                    // Outside the current packed area, no padding required
+                    if (free.x < best.x && width <= free.width && height <= free.height)//如果不算padding距离也可以放得下的话，也可以放进去
                     {
                         index = i;
-                        if ((paddedWidth == free.width && free.width <= free.height && free.right < m_Width) || (paddedHeight == free.height && free.height <= free.width))//如果这个区域正好可以放得下
+                        if ((width == free.width && free.width <= free.height && free.right < m_Width) || (height == free.height && free.height <= free.width))
                             break;
-                        best = free;
-                    }
-                    else
-                    {
-                        // Outside the current packed area, no padding required
-                        if (free.x < best.x && width <= free.width && height <= free.height)//如果不算padding距离也可以放得下的话，也可以放进去
-                        {
-                            index = i;
-                            if ((width == free.width && free.width <= free.height && free.right < m_Width) || (height == free.height && free.height <= free.width))
-                                break;
 
-                            best = free;
-                        }
+                        best = free;
                     }
                 }
             }
